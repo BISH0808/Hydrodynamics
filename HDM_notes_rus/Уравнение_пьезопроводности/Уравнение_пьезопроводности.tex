@@ -1,0 +1,450 @@
+\documentclass[a4paper,14pt]{extarticle}
+\renewcommand{\baselinestretch}{1.2}
+\usepackage[utf8]{inputenc}
+\usepackage[T2A, T1]{fontenc}
+\usepackage[english, russian]{babel}
+
+\usepackage{fontspec}
+\setmainfont{Times New Roman}
+\usepackage{setspace, amsmath}
+\usepackage{amssymb}
+\usepackage{dsfont}
+\usepackage{epsfig}
+\usepackage{pdfpages}
+
+\makeatletter
+\let\@fnsymbol\@arabic
+\makeatother
+
+\usepackage{geometry}
+\geometry{
+a4paper,
+total={180mm, 257mm},
+left=15mm,
+top=10mm,
+}
+
+\usepackage{systeme}
+\usepackage{skak}
+\usepackage{mathtools}
+\usepackage{unicode-math}
+\usepackage{array}
+\usepackage{makecell}
+\usepackage{subfiles}
+\usepackage{hyperref}
+\hypersetup{pdfstartview=FitH, linkcolor=black, urlcolor=blue, colorlinks=true}
+\usepackage{framed}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{color}
+\usepackage{chngcntr}
+\usepackage{tikz}
+\usepackage{csquotes}
+\usepackage{fancyhdr}
+\usepackage{fancyvrb}
+\usepackage{comment}
+\usepackage{adjustbox}
+\usepackage[breakable, skins]{tcolorbox}
+
+
+\usepackage{float}
+\floatstyle{plaintop}
+\usepackage{enumitem}
+\setlength{\parindent}{0pt}
+%\setcounter{section}{-1}
+
+\graphicspath{{./img/}}
+\newcommand{\myPictWidth}{.95\textwidth}
+\newcommand{\phm}{\phantom{-}}
+\newcommand{\beq}{\begin{equation}}
+\newcommand{\eeq}{\end{equation}}
+
+
+\begin{document}
+
+\section*{Уравнение пьезопроводности}
+
+Уравнение пьезопроводности -- основное уравнение подземной гидродинамики, которое описывает процесс фильтрации жидкости в пористых средах.
+
+Уравнение пьезопроводности строится на трёх уравнениях: на уравнении неразрывности потока (т.е. уравнении переноса массы, записанном в дифференциальной форме), на законе Дарси и на соотношении для сжимаемости флюида.
+\\
+
+Набор исходных уравнений для вывода уравнения пьезопроводности:
+\begin{itemize}
+	\item неразрывность потока
+	\beq\label{Continuity}
+	\frac{\partial\left(\rho_{\!f}\,\varphi\right)}{\partial t}+\pmb{\nabla}\cdot\left(\rho_{\!f}\,\varphi \, \pmb{v_f}\right)=q_f(\pmb{x}),
+	\eeq
+	где $\rho_{\!f}$ -- истинная плотность флюида; $\varphi$ -- пористость; $\pmb{v_{\!f}}$ -- истинная скорость флюида; $q_f(\pmb{x})$ -- источниковое слагаемое
+	\item закон Дарси
+	\beq\label{Darcy}
+	\pmb{W}=-\frac{k}{\mu_f}\cdot\pmb{\nabla} p,
+	\eeq
+	где $\pmb{W}=\varphi\!\left(\pmb{v_{\!f}}-\pmb{v_{\!s}}\right)$ -- потоковая скорость флюида; $k$ -- проницаемость пласта; $\mu_{\!f}$ -- вязкость флюида; $\nabla p$ -- градиент давления
+	\item соотношение на сжимаемость флюида
+	\beq\label{Compressibility}
+	p-p_0=K_{\!f}\frac{\rho_{\!f}-\rho_{\!f}^0}{\rho_{\!f}^0},
+	\eeq
+	где $K_{\!f}$ -- объёмный модуль упругости флюида (величина, обратная коэффициенту сжимаемости)
+\end{itemize}
+\ \\
+Этих трёх уравнений достаточно, чтобы вывести уравнение пьезопроводности в случае недеформируемого пласта.
+
+Если пласт упругий, то дополнительно необходимо использовать 3 уравнения пороупругости, накладывающие условия на тензор полных напряжений, тензор полных деформаций и пористость пласта.
+
+Далее будет представлено 2 вывода уравнения пьезопроводности в случае недеформируемого пласта и 1 вывод уравнения пьезопроводности в случае упругого пласта.
+\newpage
+
+\textbf{Вывод уравнения пьезопроводности в векторной форме}
+
+В предположении неподвижности скелета ($\pmb{v_{\!s}}\approx \pmb{0}$ и $\varphi(t)=\textrm{const}$) верно равенство $\pmb{W}\approx\varphi\, \pmb{v_{\!f}}$.
+Подставляя это выражение в закон Дарси \eqref{Darcy}, получаем:
+\beq\label{DarcyWithSkeletNotMoving}
+\varphi\,\pmb{v_{\!f}}=-\frac{k}{\mu_{\!f}}\cdot\pmb{\nabla} p
+\eeq
+
+Условие сжимаемости флюида \eqref{Compressibility} перепишем в дифференциальной форме:
+\beq\label{CompressibilityDiff}
+\frac{\partial p}{\partial t}=\frac{K_{\!f}}{\rho_{\!f}^0}\frac{\partial\rho_{\!f}}{\partial t}
+\eeq
+
+Учитывая предположение о неподвижности скелета, перепишем уравнение неразрывности потока \eqref{Continuity}:
+\beq\label{ContinuityWithSkeletNotMoving}
+\varphi\frac{\partial\rho_{\!f}}{\partial t}+\pmb{\nabla}\cdot\left(\rho_{\!f}\,\varphi \, \pmb{v_f}\right)=q_f(\pmb{x})
+\eeq
+
+Подставляя \eqref{DarcyWithSkeletNotMoving} и \eqref{CompressibilityDiff} в \eqref{ContinuityWithSkeletNotMoving}, при отсутствии источникового слагаемого ($q_f(\pmb{x})=0$) получаем:
+\beq
+\varphi\frac{\rho_{\!f}^0}{K_{\!f}}\frac{\partial p}{\partial t}-\pmb{\nabla}\cdot\left(\rho_{\!f}\frac{k}{\mu_{\!f}}\pmb{\nabla} p\right)=0
+\eeq
+
+При дополнительном условии слабосжимаемости флюида ($\rho_f\approx\rho_f^0=\textrm{const}$) получаем:
+\beq
+\frac{\partial p}{\partial t}=\frac{kK_{\!f}}{\mu_{\!f}\,\varphi}\,\pmb{\nabla}^2p
+\eeq
+
+Это уравнение пьезопроводности (без упругости пласта), полученное в приближении слабосжимаемого флюида, неподвижного и недеформируемого пласта.
+
+Введя коэффициент пьезопроводности
+\beq
+\kappa=\dfrac{kK_f}{\mu_{\!f}\,\varphi}=\dfrac{k}{\mu_{\!f}c_{\!f}},
+\eeq
+где $c_{\!f}=\varphi/K_{\!f}$ -- сжимаемость флюида, можем переписать уравнение пьезопроводности в следующем виде:
+\beq
+\frac{\partial p}{\partial t}=\kappa\,\pmb{\nabla}^2p
+\eeq
+
+Коэффициент пьезопроводности пласта $\kappa$ -- коэффициент, характеризующий темпы распределения пластового давления в условиях упругого режима, равный отношению проницаемости пласта к произведению вязкости жидкости и её сжимаемости.
+\newpage
+
+\textbf{Вывод уравнения пьезопроводности в покомпонентной форме с обезразмериванием (недеформируемый пласт, но учитываем зависимость пористости от давления)}
+
+Запишем \textbf{ЗСМ для флюида}:
+\beq
+\frac{\partial r_{\!f}}{\partial t}+\partial_i\!\left(r_{\!f}\, v_i^f\right)=0,
+\eeq
+где $r_{\!f}=\varphi\rho_{\!f}$ -- эффективная плотность флюида; $v_i^f$ -- истинная скорость флюида.
+
+\textbf{Закон Дарси в дифференциальной форме}:
+\beq\label{DarcyDiffAdvanced}
+W_i=-\frac{k_{ij}}{\mu}\,\partial_{\!j}p,
+\eeq
+где $W_i=\varphi v_i^f$ -- потоковая относительная скорость флюида (при неподвижном скелете), $k_{ij}$ -- тензор абсолютной проницаемости пласта, $\mu$ -- вязкость флюида.
+
+Учитывая связь эффективной и истинной плотностей ($r_{\!f}=\varphi\rho_{\!f}$), перепишем ЗСМ для флюида:
+\beq\label{ContinuityAdvanced}
+\frac{\partial\!\left(\rho_{\!f}\,\varphi\right)}{\partial t}+\partial_i\!\left(\rho_{\!f}\,\varphi v_i^f\right)=0
+\eeq
+
+Подставляя \eqref{DarcyDiffAdvanced} в \eqref{ContinuityAdvanced}, получаем:
+\beq\label{GeneralPiezo}
+\frac{\partial\!\left(\rho_{\!f}\,\varphi\right)}{\partial t}-\partial_i\!\left(\rho_{\!f}\,\frac{k_{ij}}{\mu}\,\partial_{\!j} p\right)=0
+\eeq
+
+
+Замыкающее соотношение (\textbf{связь плотности флюида и давления}):
+\beq\label{Zam1}
+\rho_{\!f}=\rho_{\!f}^0\left(1+c_{\!f}\left(p-p_0\right)\right),
+\eeq
+где $c_{\!f}$ -- сжимаемость флюида (1/Па).
+
+
+Замыкающее соотношение (\textbf{связь пористости и давления}):
+\beq\label{Zam2}
+\varphi=\varphi^0+c_{\text{п}}\left(p-p_0\right),
+\eeq
+где $c_{\text{п}}$ -- сжимаемость пор (не равно сжимаемости породы).
+
+
+Производные по времени и пространству замыкающего соотношения \eqref{Zam1} запишутся в следующем виде:
+\beq\label{DiffZam1}
+\frac{\partial\rho_{\!f}}{\partial t}=c_f\rho_{\!f}^0\frac{\partial p}{\partial t}
+\eeq
+
+\beq\label{GradZam1}
+\partial_i\rho_{\!f}=c_f\rho_{\!f}^0\partial_i p
+\eeq
+
+А производные по времени и пространству замыкающего соотношения \eqref{Zam2} примут вид:
+\beq\label{DiffZam2}
+\frac{\partial\varphi}{\partial t}=c_\text{п}\frac{\partial p}{\partial t}
+\eeq
+
+\beq\label{GradZam2}
+\partial_i\varphi=c_\text{п}\partial_i p
+\eeq
+
+
+Раскрывая производные произведений в \eqref{GeneralPiezo}, получаем:
+\beq\label{OpenGeneralContinuity}
+\frac{\partial\rho_{\!f}}{\partial t}\varphi+\rho_{\!f}\frac{\partial\varphi}{\partial t}-\frac{k_{ij}}{\mu}\,\partial_{\!j} p\,\partial_i\rho_f-\rho_{\!f}\,\partial_{\!j} p\,\,\partial_i\!\!\left(\frac{k_{ij}}{\mu}\right)-\rho_{\!f}\frac{k_{ij}}{\mu}\left(\partial_i\partial_{\!j} p\right)=0
+\eeq
+
+Подставляя \eqref{DiffZam1}, \eqref{GradZam1}, \eqref{DiffZam2} и \eqref{GradZam2} в \eqref{OpenGeneralContinuity}, получаем:
+\begin{multline}\label{Expanded}
+c_{\!f}\,\rho_{\!f}^0\frac{\partial p}{\partial t}\varphi+\rho_{\!f} c_\text{п}\frac{\partial p}{\partial t}-\frac{k_{ij}}{\mu}\,\partial_{\!j} p\,c_{\!f}\,\rho_{\!f}^0\,\partial_i p-\frac{\rho_{\!f}}{\mu}\partial_{\!j} p\,\partial_i k_{ij}+\\+\rho_{\!f}\,\partial_{\!j} p\,k_{ij}\,\frac{\partial\mu}{\partial p}\frac{1}{\mu^2}\partial_i p-\rho_{\!f}\frac{k_{ij}}{\mu}\!\left(\partial_i\partial_{\!j} p\right)=0
+\end{multline}
+
+
+Перед анализом физических уравнений всегда делают масштабный анализ, чтобы понять, какие слагаемые в уравнении важны, а какие не важны (пример: уравнение Навье-Стокса с числами Струхаля, Эйлера, Рейнольдса, Фруда).
+
+\textbf{Замечание.} ГДМ симуляторы не решают уравнение пьезопроводности в классическом виде, а решают закон сохранения массы, в который они подставляют закон Дарси.
+
+Далее необходимо выделить характерные масштабные факторы, обезразмерив каждую из функций в уравнении.
+
+Введём безразмерные давление $\tilde{p}$, расстояние $\tilde{r}$, проницаемость $\tilde{k}_{ij}$ и вязкость $\tilde{\mu}$ такие, что:
+\beq
+p=\tilde{p}\cdot p_0,\,\,\,\vec{r}=\tilde{r}\cdot L,\,\,\,k_{ij}=\tilde{k}_{ij}\cdot k_0,\,\,\,\mu=\tilde{\mu}\cdot\mu_0,
+\eeq
+где $p_0$ -- пластовое давление, $L$ -- некое характерное расстояние (например, расстояние между скважинами), $k_0$ -- некая характерная проницаемость, $\mu_0$ -- некая характерная вязкость.
+
+Все безразмерные функции (с волной) порядка единицы.
+
+Перепишем \eqref{Expanded} в введённых безразмерных величинах, разделив обе части этого уравнения на $\rho_f^0$:
+\begin{multline}
+\frac{\partial p}{\partial t}\left(\varphi c_{\!f}+\frac{\rho_{\!f}}{\rho_{\!f}^0}\cdot c_\text{п}\right)-\frac{k_0}{\mu_0}\frac{p_0^2}{L^2}c_{\!f}\frac{\tilde{k}_{ij}}{\tilde{\mu}}\,\tilde{\partial}_i\tilde{p}\,\tilde{\partial}_{\!j}\tilde{p}-\frac{\rho_{\!f}}{\rho_{\!f}^0}\frac{k_0\,p_0}{\mu_0L^2}\frac{\tilde{k}_{ij}}{\tilde{\mu}}\,\tilde{\partial}_{\!j}\tilde{p}\,\tilde{\partial}_i\tilde{k}_{ij}+\\+\frac{\rho_{\!f}}{\rho_{\!f}^0}\frac{p_0\,k_0}{L^2\mu_0}\,\tilde{\partial}_{\!j}\tilde{p}\,\tilde{k}_{ij}\frac{\partial\tilde{\mu}}{\partial\tilde{p}}\frac{1}{\tilde{\mu}^2}\,\tilde{\partial}_i\tilde{p}-\frac{\rho_{\!f}}{\rho_{\!f}^0}\frac{k_0}{\mu_0}\frac{p_0}{L^2}\,\frac{\tilde{k}_{ij}}{\tilde{\mu}}\left(\tilde{\partial}_i\tilde{\partial}_{\!j}\tilde{p}\right)=0
+\end{multline}
+
+Вынесли все масштабные множители. Далее делим обе части уравнения на множитель перед старшей производной $\left(\text{на }\frac{k_0\,p_0}{\mu_0\,L^2}\right)$, т.е. обезразмериваем уравнение:
+\begin{multline}\label{PiezoEqDiv}
+\frac{\mu_0L^2}{k_0p_0}\cdot\frac{\partial p}{\partial t}\left(\varphi c_{\!f}+\frac{\rho_{\!f}}{\rho_{\!f}^0}\cdot c_\text{п}\right)-p_0c_{\!f}\frac{\tilde{k}_{ij}}{\tilde{\mu}}\,\tilde{\partial}_i\tilde{p}\,\tilde{\partial}_{\!j}\tilde{p}-\frac{\rho_{\!f}}{\rho_{\!f}^0}\frac{\tilde{k}_{ij}}{\tilde{\mu}}\,\tilde{\partial}_{\!j}\tilde{p}\,\tilde{\partial}_i\tilde{k}_{ij}+\\+\frac{\rho_{\!f}}{\rho_{\!f}^0}\frac{\partial\tilde{\mu}}{\partial\tilde{p}}\frac{1}{\tilde{\mu}^2}\tilde{k}_{ij}\,\tilde{\partial}_{\!j}\tilde{p}\,\tilde{\partial}_i\tilde{p}-\frac{\rho_{\!f}}{\rho_{\!f}^0}\frac{\tilde{k}_{ij}}{\tilde{\mu}}\left(\tilde{\partial}_i\tilde{\partial}_{\!j}\tilde{p}\right)=0
+\end{multline}
+
+
+Сделаем 3 важных приближения:
+\begin{enumerate}
+	\item $p_0 c_f\ll 1$ (прикинем: сжимаемость воды порядка $10^{-5}\text{ атм}^{-1}=10^{-10}\text{ Па}^{-1}$; характерные значения давлений на глубинах, равных нескольким километрам, составляют сотни атмосфер; таким образом, произведение порядка $10^{-3}$, что много меньше единицы; но такое приближение не работает для газа: для него рассматриваемое произведение порядка единицы); это приближение фактически равносильно приближению $\rho_f\approx\rho_f^0$;
+	\item $\tilde{\partial}_i\tilde{k}_{ij}\ll 1$ (считаем, что на характерном масштабе задачи по данному направлению проницаемость изменяется незначительно, не больше 10 процентов);
+	\item $\dfrac{\partial\tilde{\mu}}{\partial\tilde{p}}\ll 1$ (считаем, что отмасштабированный график проницаемости от давления пологий -- этот факт подтверждается экспериментально -- вязкость слабо зависит от давления)
+\end{enumerate}
+
+Тогда уравнение \eqref{PiezoEqDiv} перепишется в следующем виде (убрали слагаемые с пренебрежимо малыми множителями в рамках сделанных приближений):
+\beq
+\frac{\mu_0L^2}{k_0p_0}\cdot\frac{\partial p}{\partial t}\underbrace{\left(\varphi c_{\!f}+c_\text{п}\right)}_{c_t}-\frac{\tilde{k}_{ij}}{\tilde{\mu}}\,\tilde{\partial}_i\tilde{\partial}_{\!j} \tilde{p}=0
+\eeq
+
+Равносильно:
+\beq
+\frac{\partial p}{\partial t}\underbrace{\left(\varphi c_{\!f}+c_\text{п}\right)}_{c_t}-\frac{k_0p_0}{\mu_0L^2}\cdot\frac{\tilde{k}_{ij}}{\tilde{\mu}}\,\tilde{\partial}_i\tilde{\partial}_{\!j} \tilde{p}=0
+\eeq
+
+Вернёмся от безразмерных функций с волной к обычным функциям:
+\beq
+\frac{\partial p}{\partial t}\underbrace{\left(\varphi c_{\!f}+c_\text{п}\right)}_{c_t}-\frac{k_{ij}}{\mu}\,\partial_i\partial_{\!j} p=0
+\eeq
+(заметим, что если есть анизотропия проницаемости, то лапласиана в уравнении не будет; вместо него будет честный $\partial_i\partial_{\!j}p$).
+
+
+Получаем классическое уравнение пьезопроводности:
+\beq
+\frac{\partial p}{\partial t}-\frac{k_{ij}}{\mu c_t}\partial_i\partial_{\!j} p=0,
+\eeq
+где $c_t$ -- это полная сжимаемость.
+
+\textbf{Замечание.} Но есть литература, в которой $c_t=c_{\!f}+\dfrac{c_\text{п}}{\varphi}=c_{\!f}+c_{\text{породы}}$, тогда уравнение пьезопроводности будет выглядеть так:
+\beq
+\frac{\partial p}{\partial t}-\frac{k_{ij}}{\mu\varphi c_t}\partial_i\partial_{\!j} p=0
+\eeq
+
+
+\textbf{Пусть тензор проницаемости изотропен} $k_{ij}=k_0\cdot\delta_{ij}$, тогда:
+\beq
+\frac{\partial p}{\partial t}-\frac{k_0}{\mu c_t}\delta_{ij}\,\partial_i\partial_{\!j} p=0\Leftrightarrow\frac{\partial p}{\partial t}-\frac{k_0}{\mu c_t}\Delta p=0
+\eeq
+(получили всем известный вид уравнения пьезопроводности).
+\newpage
+
+\textbf{Задача по моделированию фильтрации жидкости в пласте с помощью уравнения пьезопроводности.}
+
+Полубесконечный горизонтальный пористый пласт имеет вид прямоугольного параллелепипеда, все грани которого (кроме левой) непроницаемы для жидкости.
+Пласт насыщен жидкостью с коэффициентом объёмной сжимаемости $\beta=1\cdot 10^{-10}\text{ Па}^{-1}$, давление которой во всех точках в начальный момент времени постоянно и равно $p_0=5\text{ МПа}$.
+На левой границе пласта давление в момент времени $t=0$ мгновенно уменьшается до $p_e=1\text{ МПа}$ и в дальнейшем поддерживается постоянным.
+
+Определить значение давления в момент времени $t=100\text{ с}$ в точке пласта, отстоящей на расстоянии $x=10\text{ м}$ от его левой границы, если зависимость скорости течения жидкости в пласте от давления описывается линейным законом Дарси.
+Известно, что пористость пласта $\varphi=0.1$, проницаемость пласта $k=10^{-14}\text{ м}^2$ и динамическая вязкость жидкости $\mu=10^{-3}\text{ Па}\cdot\text{с}$
+\\
+
+\textbf{Решение задачи.}
+
+Решение задачи сводится к решению начально-краевой задачи для уравнения пьезопроводности:
+\beq\label{InitialTask}
+\begin{cases}
+\dfrac{\partial p}{\partial t}=\overbrace{\left(\dfrac{k}{\varphi\mu\beta}\right)}^{\substack{\text{коэффициент}\\\text{пьезопро-ти }\kappa}}\dfrac{\partial^2 p}{\partial x^2}\\
+p(x,0)=p_0 \,(\text{при }x\geqslant0)\\
+p(0,t)=p_e \,(\text{при }t>0)\\
+p(\infty, t)=p_0 \,(\text{при }t>0)
+\end{cases}
+\eeq
+
+Введём новую безразмерную переменную
+\beq\label{NewVar}
+\xi=\dfrac{x}{2\sqrt{\kappa t}}
+\eeq
+и сведём задачу к нахождению давления $p$, зависящего только от новой переменной.
+\\
+
+По правилу дифференцирования сложных функций получим:
+\beq
+\frac{\partial p}{\partial t}=\frac{d p}{d\xi}\frac{\partial\xi}{\partial t}=\frac{d p}{d\xi}\left(-\frac{\xi}{2t}\right)
+\eeq
+\beq
+\frac{\partial p}{\partial x}=\frac{d p}{d\xi}\frac{\partial\xi}{\partial x}=\frac{d p}{d\xi}\frac{1}{2\sqrt{\kappa t}}
+\eeq
+\beq
+\frac{\partial^2p}{\partial x^2}=\frac{\partial}{\partial x}\left(\frac{\partial p}{\partial x}\right)=\frac{\partial}{\partial x}\left(\frac{1}{2\sqrt{\kappa t}}\frac{dp}{d\xi}\right)=\frac{1}{2\sqrt{\kappa t}}\frac{d^2p}{d\xi^2}\frac{\partial\xi}{\partial x}=\frac{1}{4\kappa t}\frac{d^2p}{d\xi^2}
+\eeq
+\\
+
+Подставляя найденные значения производных в уравнение пьезопроводности, получим обыкновенное дифференциальное уравнение:
+\beq\label{ODE}
+-2\cdot\xi\cdot\frac{dp}{d\xi}=\frac{d^2p}{d\xi^2}
+\eeq
+
+Начальные и граничные условия исходной начально-краевой задачи \eqref{InitialTask} перепишутся в следующем виде:
+\beq\label{ODEBoundaries}
+\begin{cases}
+p|_{\xi=0}=p_e\\
+p|_{\xi\rightarrow\infty}=p_0
+\end{cases}
+\eeq
+\ \\
+
+Для решения полученного обыкновенного дифференциального уравнения второго порядка \eqref{ODE} введём новую переменную:
+\beq
+p_\xi=\frac{dp}{d\xi}
+\eeq
+и перепишем уравнение \eqref{ODE} в следующем виде:
+\beq
+-2\cdot\xi\cdot p_\xi=\frac{dp_\xi}{d\xi}
+\eeq
+
+Разделив переменные и проинтегрировав, получим:
+\beq
+\ln{p_\xi}=-\xi^2+\ln{C_1}
+\eeq
+или
+\beq
+\frac{dp}{d\xi}=C_1\exp\left(-\xi^2\right)
+\eeq
+
+Интегрируя данное уравнение, получим общее решение дифференциального уравнения \eqref{ODE}:
+\beq
+p=C_1\cdot\int\limits_{0}^{\xi}\exp{\left(-\xi^2\right)d\xi}+C_2
+\eeq
+
+Константы интегрирования $C_1$ и  $C_2$ определим из условий \eqref{ODEBoundaries}:
+\beq
+\begin{cases}
+C_2=p_e\\\\
+C_1=\dfrac{p_0-p_e}{\int\limits_{0}^{\infty}{\exp{\left(-\xi^2\right)d\xi}}}
+\end{cases}
+\eeq
+
+Получаем следующее решение:
+\beq
+p=p_e+\dfrac{p_0-p_e}{\int\limits_{0}^{\infty}{\exp{\left(-\xi^2\right)d\xi}}}\cdot\int\limits_{0}^{\xi}\exp{\left(-\xi^2\right)d\xi}
+\eeq
+
+Известно, что $\displaystyle{}\int\limits_{0}^{\infty}{\exp{\left(-\xi^2\right)d\xi}}=\frac{\sqrt{\pi}}{2}$, поэтому
+\beq
+p=p_e+\frac{2\left(p_0-p_e\right)}{\sqrt{\pi}}\cdot\int\limits_{0}^{\xi}\exp{\left(-\xi^2\right)d\xi}
+\eeq
+
+Знаем, что $\displaystyle{}\dfrac{2}{\sqrt{\pi}}\int\limits_{0}^{\xi}\exp{\left(-\xi^2\right)}d\xi=\text{erf}\left(\xi\right)$ -- это функция ошибок Гаусса, поэтому:
+\beq
+p=p_e+\left(p_0-p_e\right)\text{erf}\left(\xi\right)
+\eeq
+или, подставляя выражение \eqref{NewVar} для $\xi$, получаем:
+\beq
+p=p_e-\left(p_e-p_0\right)\,\text{erf}\!\left(\dfrac{x}{2\sqrt{\dfrac{k}{\varphi\mu\beta}\,t}}\right)
+\eeq
+
+Подставляя в это выражение исходные данные задачи, получим, что давление в указанной точке и в указанный момент времени примерно равно $3.082\text{ МПа}$.
+
+\textbf{Замечание.} Но обычно уравнение пьезопроводности решают не аналитически, а численно, так как у реальных залежей геометрия гораздо более сложная.
+
+\newpage
+
+\textbf{Вывод уравнения пьезопроводности для "<упругого пласта">}
+
+Для \textbf{упругого изотропного пласта} можем записать известные соотношения пороупругости:
+\begin{itemize}[parsep=-1pt]
+\item на тензор полных напряжений \\
+\beq
+\pmb{T}=\sigma^0\pmb{I}+\left(\lambda I_1(\pmb{\varepsilon})-b\Delta p\right)\pmb{I}+2\mu\pmb{\varepsilon},
+\eeq
+где $\pmb{T}$ -- тензор полных напряжений; $\pmb{I}$ -- единичный тензор; $\pmb{\varepsilon}$ -- тензор полных деформаций; $\lambda=K-2G/3$ и $\mu=G$ -- константы (параметры) Ляме; $K$ -- модуль всестороннего сжатия; $G$ -- модуль сдвига; $I_1(\pmb{\varepsilon})$ -- след тензора полных деформаций; $b$ -- константа Био; $\Delta p$ -- изменение давления; $\sigma^0$ -- начальное напряжение
+\item на пористость \\
+\beq
+\varphi = \varphi_0+bI_1(\pmb{\varepsilon})+\dfrac{1}{N}\Delta p,
+\eeq
+где $\varphi_0$ -- начальная пористость; $b$ -- константа Био; $I_1(\pmb{\varepsilon})$ -- след тензора полных деформаций; $N$ -- модуль Био; $\Delta p$ -- изменение давления.
+\item условие равновесия \\
+\beq
+\pmb{\nabla}\cdot\pmb{T}=\pmb{0}
+\eeq
+\end{itemize}
+
+Для \textbf{флюида} запишем:
+\begin{itemize}[parsep=-1pt]
+	\item закон Дарси \\
+	\beq
+	\pmb{W}=-\frac{k}{\mu_f}\cdot\pmb{\nabla} p,
+	\eeq
+	где $\pmb{W}=\varphi\left(\pmb{v_{\!f}}-\pmb{v_{\!s}}\right)$; $k$ -- проницаемость пласта; $\mu_{\!f}$ -- вязкость флюида; $\pmb{\nabla} p$ -- градиент давления
+	\item соотношение на сжимаемость флюида
+	\beq
+	p-p_0=K_{\!f}\frac{\rho_{\!f}-\rho_{\!f}^0}{\rho_{\!f}^0},
+	\eeq
+	где $\dfrac{1}{K_{\!f}}$ -- сжимаемость флюида ($K_{\!f}$ -- объёмный модуль упругости флюида)
+	\item уравнение неразрывности потока при отсутствии источникового слагаемого (уравнение переноса массы, записанное в дифференциальной форме):
+	\beq
+	\frac{\partial\left(\rho_{\!f}\,\varphi\right)}{\partial t}+\pmb{\nabla}\cdot\left(\rho_{\!f}\,\varphi\,\pmb{v_{\!f}}\right)=0
+	\eeq
+\end{itemize}
+
+Из \textbf{уравнения неразрывности} получаем:
+\beq
+\varphi_0\frac{\partial\rho_{\!f}}{\partial t}+\rho_0\frac{\partial\varphi}{\partial t}+\rho_0\pmb{\nabla}\cdot\pmb{W}+\rho_0\varphi_0\frac{\partial I_1(\pmb{\varepsilon})}{\partial t}=0,
+\eeq
+где
+\beq
+\frac{\partial I_1(\pmb{\varepsilon})}{\partial t}\equiv\pmb{\nabla}\cdot\pmb{v_s}
+\eeq
+
+А дальше через ряд свёрток и всяких операций получаем:
+\beq
+b\dot{I}_1(\pmb{\varepsilon})+\left(\frac{1}{N}+\frac{\varphi_0}{K_{\!f}}\right)\dot{p}=\frac{k}{\mu_{\!f}}\pmb{\nabla}^2p
+\eeq
+
+В осесимметричном случае при условии отсутствия деформации на бесконечности получаем:
+\beq
+\dot{p}=a\pmb{\nabla}^2p,
+\eeq
+где
+\beq
+a=\frac{kM}{\mu_{\!f}}\text{ и } M=\frac{b\left(b+\varphi\right)}{\lambda+2\mu}+\frac{1}{N}+\frac{\varphi}{K_{\!f}}
+\eeq
+
+\end{document}
