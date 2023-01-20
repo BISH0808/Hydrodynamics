@@ -1,0 +1,211 @@
+\documentclass[a4paper,14pt]{extarticle}
+\renewcommand{\baselinestretch}{1.2}
+\usepackage[utf8]{inputenc}
+\usepackage[T2A, T1]{fontenc}
+\usepackage[english, russian]{babel}
+
+\usepackage{fontspec}
+\setmainfont{Times New Roman}
+\usepackage{setspace, amsmath}
+\usepackage{amssymb}
+\usepackage{dsfont}
+\usepackage{epsfig}
+\usepackage{pdfpages}
+
+\makeatletter
+\let\@fnsymbol\@arabic
+\makeatother
+
+\usepackage{geometry}
+\geometry{
+a4paper,
+total={180mm, 257mm},
+left=15mm,
+top=10mm,
+}
+
+\usepackage{systeme}
+\usepackage{skak}
+\usepackage{mathtools}
+\usepackage{unicode-math}
+\usepackage{array}
+\usepackage{makecell}
+\usepackage{subfiles}
+\usepackage{hyperref}
+\hypersetup{pdfstartview=FitH, linkcolor=black, urlcolor=blue, colorlinks=true}
+\usepackage{framed}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{color}
+\usepackage{chngcntr}
+\usepackage{tikz}
+\usepackage{csquotes}
+\usepackage{fancyhdr}
+\usepackage{fancyvrb}
+\usepackage{comment}
+\usepackage{adjustbox}
+\usepackage[breakable, skins]{tcolorbox}
+
+
+\usepackage{float}
+\floatstyle{plaintop}
+\usepackage{enumitem}
+\setlength{\parindent}{0pt}
+%\setcounter{section}{-1}
+
+\graphicspath{{./img/}}
+\newcommand{\myPictWidth}{.95\textwidth}
+\newcommand{\phm}{\phantom{-}}
+\newcommand{\beq}{\begin{equation}}
+\newcommand{\eeq}{\end{equation}}
+
+
+\begin{document}
+
+\section*{Модель Баклея-Леверетта}
+
+Исторически первой появилась не модель Баклея-Леверетта, а модель поршневого вытеснения.
+
+Модель поршневого вытеснения далеко не совершенна и может быть использована для очень приближённых (оценочных) расчётов (например, для верхней оценки времени прихода фронта заводнения -- фронт достигнет определённого положения не дольше, чем за время поршневого вытеснения).
+\\
+
+\textbf{Основные допущения модели поршневого вытеснения:}
+
+1) рассматривается несмешивающаяся фильтрация (т.е. существует явный раздел фаз);
+
+2) жидкости и порода несжимаемы;
+
+3) за фронтом вытеснения остаётся только остаточная нефтенасыщенность
+\\
+
+При поршневом вытеснении граница фронта заводнения фактически определяется из накопленной закачки воды.
+\\
+
+Достаточно быстро заметили, что с приходом фронта воды обводнились не сразу до 100\%, а продолжаем добывать нефть.
+Это говорит о том, что несмотря на прорыв фронта за этим фронтом осталось достаточно много запасов (не только остаточная нефтенасыщенность).
+И эти запасы постепенно вымываются. Чтобы учесть подобное поведение, была разработана \textbf{модель Баклея-Леверетта}.
+\\
+
+\textbf{Основные допущения модели Баклея-Леверетта:}
+
+1) рассматривается несмешивающаяся фильтрация (т.е. существует явный раздел фаз);
+
+2) жидкости и порода несжимаемы (нет зависимости плотностей флюидов и пористости от давления и времени);
+
+3) жидкости движутся в соответствии с фазовыми проницаемостями (т.е. для каждой жидкости выполняется закон Дарси, но у каждой из жидкостей своя эффективная проницаемость);
+
+4) капиллярное давление равно нулю (т.е. $p_o=p_w=p$)
+
+С учётом введённых допущений рассмотрим двухфазную фильтрацию системы вода-нефть в пористой среде.
+
+\textbf{Закон Дарси для нефти} (ось $x$ направлена вдоль направления фильтрации; силами гравитации пренебрегаем):
+\beq\label{DarcyOil}
+\varphi\cdot v_o=-\frac{k\cdot k_{ro}(S_w)}{\mu_o}\cdot\frac{\partial p}{\partial x}
+\eeq
+
+\textbf{Закон Дарси для воды} (ось $x$ направлена вдоль направления фильтрации; силами гравитации пренебрегаем):
+\beq\label{DarcyWater}
+\varphi\cdot v_w=-\frac{k\cdot k_{rw}(S_w)}{\mu_w}\cdot\frac{\partial p}{\partial x}
+\eeq
+
+Из \eqref{DarcyOil} и \eqref{DarcyWater}:
+\beq\label{Buckley_Leverett_func}
+\dfrac{v_w}{v_o+v_w}=\dfrac{\dfrac{k_{rw}(S_w)}{\mu_w}}{\dfrac{k_{ro}(S_w)}{\mu_o}+\dfrac{k_{rw}(S_w)}{\mu_w}}=\frac{1}{1+\dfrac{k_{ro}\mu_w}{k_{rw}\mu_o}}\stackrel{\text{def}}{=}f_w(S_w)
+\eeq
+
+получаем определение \textbf{функции Баклея-Леверетта} $f_w(S_w)$ (зависит от насыщенности, так как относительные фазовые проницаемости, входящие в определение, зависят от насыщенности).
+
+\textbf{Закон сохранения массы (неразрывности потока) для нефти} (используем допущение о несжимаемости нефти; ось $x$ направлена вдоль направления фильтрации):
+\beq\label{ConstMassOil}
+\varphi\rho_{o}\frac{\partial\left(1-S_w\right)}{\partial t}+\rho_o\frac{\partial v_o}{\partial x}=0
+\eeq
+
+\textbf{Закон сохранения массы (неразрывности потока) для воды} (используем допущение о несжимаемости воды; ось $x$ направлена вдоль направления фильтрации):
+\beq\label{ConstMassWater}
+\varphi\rho_{w}\frac{\partial S_w}{\partial t}+\rho_w\frac{\partial v_w}{\partial x}=0
+\eeq
+
+Складывая \eqref{ConstMassOil} и \eqref{ConstMassWater}, получаем:
+\beq\label{ZeroSumDiv}
+\frac{\partial\left(v_o+v_w\right)}{\partial x}=0
+\eeq
+(т.е. суммарная скорость двухфазного потока не зависит от координаты $x$: либо является постоянной величиной, либо известной функцией времени).
+
+Выражая $v_w$ из \eqref{Buckley_Leverett_func} и подставляя её в \eqref{ConstMassWater}, получаем:
+\beq
+\varphi\frac{\partial S_w}{\partial t}+\frac{\partial\!\left(f_w(S_w)\cdot(v_o+v_w)\right)}{\partial x}=0
+\eeq
+
+Раскроем производную произведения:
+\beq
+\varphi\frac{\partial S_w}{\partial t}+\frac{\partial\!\left(f_w(S_w)\right)}{\partial x}\cdot\left(v_o+v_w\right)+f_w(S_w)\cdot\frac{\partial\left(v_o+v_w\right)}{\partial x}=0
+\eeq
+
+Учитывая равенство \eqref{ZeroSumDiv}, получаем:
+\beq\label{Buckley_Leverett_eqn}
+\varphi\frac{\partial S_w}{\partial t}+\frac{\partial\!\left(f_w(S_w)\right)}{\partial x}\cdot\left(v_o+v_w\right)=0
+\eeq
+
+По правилу цепочки дифференцирования сложной функции:
+$$
+\frac{\partial\!\left(f_w(S_w)\right)}{\partial x}=\frac{\partial f_w}{\partial S_w}\frac{\partial S_w}{\partial x}
+$$
+
+Суммарная скорость двухфазного потока $\left(v_o+v_w\right)$ есть отношение расхода жидкости $q_t$ к площади поперечного сечения фильтрации $A$.
+
+Таким образом, из \eqref{Buckley_Leverett_eqn} получаем основное уравнение двухфазной фильтрации (уравнение Баклея-Леверетта) в классическом виде:
+\beq\label{Buckley_Leverett_eqnClassic}
+\varphi\frac{\partial S_w}{\partial t}=-\frac{\partial f_w}{\partial S_w}\frac{\partial S_w}{\partial x}\frac{q_t}{A}
+\eeq
+
+В процессе нагнетания воды в пласт её насыщенность будет меняться со временем вдоль направления движения $x$.
+Связь между $S_w$, $x$ и $t$ можно записать в функциональной форме $S_w=S_w(x,t)$ или в дифференциальной форме:
+\beq
+dS_w=\frac{\partial S_w}{\partial x}dx+\frac{\partial S_w}{\partial t}dt
+\eeq
+
+Рассмотрим на плоскости $(x,t)$ такие линии $x(t)$, вдоль которых насыщенность принимает заданное постоянное значение (т.е. рассмотрим изолинии насыщенности).
+Для любого заданного значения насыщенности $S_{w0}$ можно установить такую связь между $x$ и $t$, что выполняется равенство $S_w=S_w(x,t)=S_{w0}=\text{const}$ или в дифференциальной форме:
+\beq\label{ConstSaturationDiff}
+\frac{\partial S_w}{\partial x}dx+\frac{\partial S_w}{\partial t}dt=0
+\eeq
+
+Таким образом, линия (фронт) распространения с заданной водонасыщенностью (т.е. связь между $x$ и $t$ при фиксированном значении $S_{w0}$) получается совместным решением уравнений \eqref{Buckley_Leverett_eqnClassic} и \eqref{ConstSaturationDiff}:
+\beq\label{Front}
+\begin{cases}
+\varphi\dfrac{\partial S_w}{\partial t}+\dfrac{\partial f_w}{\partial S_w}\dfrac{\partial S_w}{\partial x}\dfrac{q_t}{A}=0 \\\\
+\dfrac{\partial S_w}{\partial x}dx+\dfrac{\partial S_w}{\partial t}dt=0
+\end{cases}
+\eeq
+
+Для того, чтобы система \eqref{Front} однородных и линейных (относительно частных производных водонасыщенности по координате и времени) уравнений имела отличное от нуля (нетривиальное) решение, необходимо, чтобы её определитель был равен нулю:
+\beq
+\left\lvert
+\begin{matrix}
+\varphi & \dfrac{\partial f_w}{\partial S_w}\dfrac{q_t}{A}\\\\
+dt & dx
+\end{matrix}
+\right\rvert=0
+\eeq
+
+Откуда находим:
+\beq\label{SaturationFrontVelocity}
+\frac{dx}{dt}=\frac{q_t}{A\varphi}\frac{\partial f_w}{\partial S_w},
+\eeq
+где производные $\dfrac{dx}{dt}$ и $\dfrac{\partial f_w}{\partial S_w}$ вычисляются при постоянном значении водонасыщенности $S_{w0}$.
+\\
+
+Уравнение \eqref{SaturationFrontVelocity} можно интерпретировать следующим образом: фронт с постоянной заданной насыщенностью движется с постоянной скоростью, пропорциональной $q_t/(A\cdot\varphi)$.
+\\
+
+Итак, скорость движения фронта с данной водонасыщенностью $S_{w0}$:
+\beq
+v|_{S_{w0}}=\frac{dx}{dt}\bigg|_{S_{w0}}=\frac{q_t}{A\varphi}\frac{\partial f_w}{\partial S_w}\bigg|_{S_{w0}}
+\eeq
+
+Т.е. скорость движения фронта с данной водонасыщенностью зависит от характера производной функции Баклея-Леверетта по насыщенности и конкретного значения этой насыщенности на рассматриваемом фронте.
+
+\textbf{Важно!} Разные насыщенности движутся с разной скоростью.
+
+\end{document}
